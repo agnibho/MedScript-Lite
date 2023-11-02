@@ -1,0 +1,214 @@
+MedScript Lite
+==============
+
+MedScript Lite is a medical prescription writing software. It is primarily for
+medical practitioners for writing prescriptions.
+
+MedScript Lite is the JavaScript implementation of MedScript. It has a limited
+feature set. But it can run on any device with a modern web browser.
+
+The purpose of the program is to enable medical practitioners to prepare
+computerized prescriptions. The program has been designed after the commonly
+used prescription format among the medical practitioners in India.
+Inclusion of prescription style of other regions will hopefully be implemented
+in future updates.
+
+File
+----
+
+The program uses a custom file format mpaz (Medical Prescription Archive -
+Zipped). It is a zip file in a specific format which includes:
+
+1. A meta.json file containing file type and mpaz version.
+2. A prescription.zip file containing the actual prescription.
+3. An attachment folder containing attached files.
+4. A template folder containing the bundled prescription template. This
+feature is not supported in MedScript Lite.
+
+Optionally the mpaz archive may also include an S/MIME signature and
+certificate for authentication, but it is not implemented in MedScript Lite.
+
+The structure of the mpaz file is as follows:
+
+    <filename>.mpaz (zipped file)
+    |-- meta.json (e.g. {"type": "MedScript", "version": "<mpaz version>"})
+    |-- prescription.json (Prescription object in JSON format)
+    |-- template (included template for rendering)
+    |   |-- index.html (Jinja2 template)
+    |   |-- <other template files e.g. CSS>
+    |-- attachment (directory containing attachments)
+    |   |-- <attached files>
+    |-- signature (optional: S/MIME signature)
+    |-- certificate.pem (optional: full certificate chain including end-user, intermediates and root certificate)
+
+Install
+-------
+
+To use MedScript Lite, you can git repository and build the app from source.
+The following commands can be run in a GNU/Linux terminal.
+
+1. Clone the git repository.
+
+    git clone https://code.agnibho.com/repo/medscript-lite.git
+
+2. Enter the cloned directory.
+
+    cd medscript-lite
+
+3. Run the app.
+
+    npm run serve
+
+This will create a local web server and serve the app from there. It can be accessed
+at localhost:8080 from any modern web browser in the local system.
+
+4. Build the app (optional).
+
+    npm run build
+
+This will create a "dist" directory containing the compiled app. This
+directory maybe placed in a server for online use.
+
+Usage
+-----
+
+MedScript Lite has a very intuitive interface.
+
+The home screen contains the options to open a file, create a new file,
+editing prescriber information and the information about the app.
+
+### Creating a prescription
+
+A new prescription can be created by clicking on the "New" button. The
+prescription editing screen will open. The required data can be entered in the
+form.
+
+The parts of a prescription are as follows:
+1. ID
+2. Name
+3. Age
+4. Sex
+5. Address
+6. Contact
+7. Diagnosis
+8. Extra (any extra data about the patient. can also be used to certify)
+9. DAW (dispense as written)
+10. Mode (consultation mode e.g. tele-consultation)
+11. Note (clinical notes)
+12. Report (available reports)
+13. Advice
+14. Investigation
+15. Medication
+16. Additional
+17. Attachment (files can be attached with the prescription from this option)
+
+After editing the "Save" button below can be used to save the data in a
+mpaz file and download it. The "Render" button will render the prescription
+into a printable format. The "Cancel" button can be used to cancel the edits
+and return to the home screen.
+
+### Opening a prescription
+
+The home screen has the option of opening a prescription. A prescription can
+be opened by selecting the file in the home screen and clicking the "Open"
+button.
+
+### Rendering a prescription
+
+The prescriptions can be rendered and subsequently printed. To render a
+prescription, click on the "Render" button in the edit screen. The rendered
+prescription can be printed or converted to PDF by using the print to pdf
+option in the browser.
+
+### Template
+
+The program uses nunjucks (similar to Jinja2) template for rendering the
+prescription. Two templates (one for default prescription and one for medical
+certificates) are included with the app. Custom templates are not supported.
+
+Note that MedScript Lite do not include the templates in the mpaz file.
+
+### Medical Certificate
+
+The Certify/Extra area can be used to write a medical prescription. Select the
+medical certificate template from the edit screen for proper rendering.
+
+Prescriber
+----------
+
+The data of the practitioner is stored locally in the browser. To view or edit
+the prescriber information, click the "Prescriber" button in the home screen.
+
+The following information can be entered about the prescriber:
+
+1. Name
+2. Qualification
+3. Registration
+4. Address
+5. Contact
+6. Extra
+
+Prescription Object
+-------------------
+
+The program uses a Prescription object to store the prescription data. The
+structure of the Prescription object is as follows:
+
+    prescription (Prescription object)
+    |-- date (string: date-time in the %Y-%m-%d %H:%M:%S format)
+    |-- id (string: the id of the prescription)
+    |-- name (string: the name of the patient)
+    |-- age (string: the age of the patient, may contain unit)
+    |-- sex (string: sex of the patient)
+    |-- address (string: address of the patient)
+    |-- contact (string: contact number / email of the patient)
+    |-- extra (string: extra data related to the prescription, may also be used for writing certificates)
+    |-- mode (string: the mode of consultation e.g. tele-consultation)
+    |-- daw (boolean: dispense as written)
+    |-- diagnosis (string: diagnosis of the patient's condition)
+    |-- note (string: clinical note e.g. history, physical examination)
+    |-- report (string: available reports)
+    |-- advice (string: advice given to the patient, not the medications)
+    |-- investigation (string: investigations suggested for the patient)
+    |-- medication (string: the list of medications prescribed)
+    |-- additional (string: any additional advice/instructions)
+    |-- prescriber (Prescriber object)
+    |   |-- name (string: the name of the prescriber)
+    |   |-- qualification (string: the qualification of the prescriber)
+    |   |-- registration (string: the registration number of the prescriber)
+    |   |-- address (string: the address of the prescriber)
+    |   |-- contact (string: contact number / email of the prescriber)
+    |   |-- extra (string: any extra data about the prescriber)
+
+Website
+-------
+
+<https://code.agnibho.com/medscript-lite/>
+
+License
+-------
+
+MedScript Lite
+
+Copyright (C) 2023 Dr. Agnibho Mondal
+
+MedScript Lite is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+
+MedScript Lite is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+MedScript Lite. If not, see <https://www.gnu.org/licenses/>.
+
+Contact
+-------
+
+Dr. Agnibho Mondal
+
+mondal@agnibho.com
+
+www.agnibho.com

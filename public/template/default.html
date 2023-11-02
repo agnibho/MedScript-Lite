@@ -1,0 +1,104 @@
+<!--
+MedScript Lite
+Copyright (C) 2023 Dr. Agnibho Mondal
+This file is part of MedScript Lite.
+MedScript Lite is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+MedScript Lite is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with MedScript Lite. If not, see <https://www.gnu.org/licenses/>.
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Prescription</title>
+    <!--link rel="stylesheet" href="style.css"-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  </head>
+  <body>
+    <div>
+      <div class="header" style="position:fixed;top:0;width:95%;left:50%;transform:translateX(-50%);background:white;top:0;border-bottom:2px solid black;height:200px">
+        <table class="table">
+          <tr>
+            <td class="col-sm-8">
+              <h1>{{prescriber.name}}</h1>
+              <h2>{{prescriber.qualification}}</h2>
+              <h3>{{prescriber.registration}}</h3>
+            </td>
+            <td class="col-sm-4">
+              <pre>{{prescriber.address}}</pre>
+              <p>{% if prescriber.contact %}Contact: {{prescriber.contact}}{% endif %}</p>
+              <pre>{{prescriber.extra}}</pre>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="content">
+        <table class="table">
+          <thead><tr><td><div class="header-space" style="height: 200px;"></div></td></tr></thead>
+          <tbody>
+            <tr>
+              <td>
+                <table class="table">
+                  <tr>
+                    <td class="text-end" colspan="3"><small>{% if id %}ID: {{id}}{% endif %}</small></td>
+                  </tr>
+                  <tr>
+                    <td><p><strong>Name:</strong> {{name}}</p></td>
+                    <td><p><strong>Age:</strong> {{age}}</p></td>
+                    <td><p><strong>Sex:</strong> {{sex}}</p></td>
+                  </tr>
+                  <tr>
+                    <td colspan="3"><small>{% if address %}Address: {{address}}{% endif %} {% if contact %}Contact: {{contact}}{% endif %}</small></td>
+                  </tr>
+                  <tr>
+                    <td colspan="3"><small>{% if extra %}{{extra}}{% endif %}</small></td>
+                  </tr>
+                </table>
+                <table class="table">
+                  <tr>
+                    <td class="col-sm-4 text-center"><p><strong>Clinical Notes</strong></p></td>
+                    <td class="col-sm-8 text-center"><p><strong>Advice</strong></p></td>
+                  </tr>
+                  <tr>
+                    <td style="border-right: 2px solid gray">
+                      {% if diagnosis %}
+                      {% if diagnosis_list|length > 1 %}
+                      <ul>
+                        {% for diag in diagnosis_list %}<li><strong>{{diag}}</strong></li>{% endfor %}
+                      </ul>
+                      {% else %}
+                      <p><strong>{{diagnosis}}</strong></p>
+                      {% endif %}
+                      {% endif %}
+                      {% if note %}<pre>{{note}}</pre>{% endif %}
+                      {% if report %}<pre>{{report}}</pre>{% endif %}
+                    </td>
+                    <td style="border-left: 2px solid gray">
+                      {% if advice %}<pre>{{advice}}</pre>{% endif %}
+                      <ol>
+                        {% for med in medication_list %}
+                        <li><strong>{{med[0]}}</strong><br>
+                          <small><em>{{med[1]}}</em></small></li>
+                        <hr>
+                        {% endfor %}
+                      </ol>
+                      {% if investigation %}<pre>{{investigation}}</pre>{% endif %}
+                      {% if additional %}<pre>{{additional}}</pre>{% endif %}
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot><tr><td><div class="footer-space" style="height: 100px;"></div></td></tr></tfoot>
+        </table>
+      </div>
+      <div class="footer" style="position:fixed;bottom:0;width:95%;left:50%; transform:translateX(-50%);background:white;bottom:0;border-top:2px solid black;height:100px">
+        <table class="table">
+          <tr><td class="col-sm-8">{% if mode %}Consultation: {{mode}}{% endif %}<br>{% if daw %}Dispense as written{% endif %}</td><td class="col-sm-4"><br><br></td></tr>
+          <tr><td><p>{{date|date("YYYY-MM-DDTHH:mm:ss")}}</p></td><td class="text-center" style="border-top: 2px solid gray"><p>Signature</p></td></tr>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
