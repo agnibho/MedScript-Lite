@@ -25,8 +25,6 @@ You should have received a copy of the GNU General Public License along with Med
 		},
 		methods: {
 			render() {
-				console.log(this.prescription.prescriber);
-				console.log(this.template);
 				fetch("template/"+this.template+".html")
 					.then((response)=>response.text())
 					.then(function(response) {

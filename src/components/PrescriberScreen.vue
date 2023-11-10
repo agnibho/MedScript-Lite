@@ -17,6 +17,12 @@ You should have received a copy of the GNU General Public License along with Med
 				</div>
 			</div>
 			<div class="form-group row mb-2">
+				<label for="qualification" class="col-sm-2">Qualification:</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="qualification" v-model="prescriber.qualification">
+				</div>
+			</div>
+			<div class="form-group row mb-2">
 				<label for="registration" class="col-sm-2">Registration:</label>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" id="registration" v-model="prescriber.registration">
@@ -47,6 +53,9 @@ You should have received a copy of the GNU General Public License along with Med
 				<div class="col-sm-3 d-grid gap-2">
 					<button type="button" @click="cancel" class="btn btn-warning">Cancel</button>
 				</div>
+				<div class="col-sm-3 d-grid gap-2">
+					<button type="button" @click="reset" class="btn btn-danger">Reset</button>
+				</div>
 			</div>
 		</form>
 	</div>
@@ -66,15 +75,19 @@ You should have received a copy of the GNU General Public License along with Med
 					prescriber=JSON.parse(localStorage.getItem("prescriber"));
 				}
 				catch {
-					prescriber={name: "", registration: "", address: "", contact: "", extra: ""}
+					prescriber={name: "", qualification: "", registration: "", address: "", contact: "", extra: "", properties: null}
 				}
 				return prescriber;
 			},
 			save() {
 				localStorage.setItem("prescriber", JSON.stringify(this.prescriber));
+				this.$emit("save");
 			},
 			cancel() {
 				this.$emit("cancel");
+			},
+			reset() {
+				this.prescriber={name: "", qualification: "", registration: "", address: "", contact: "", extra: "", properties: null}
 			}
 		}
 	}

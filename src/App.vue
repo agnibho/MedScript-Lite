@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License along with Med
 			<home-screen @openPrescription="loadPrescription" @openAttachment="loadAttachment" @newFile="newFile" @editPrescriber="editPrescriber" v-show="showComponent.home"></home-screen><br>
 			<edit-screen @renderPrescription="renderPrescription" @cancel="cancelEdit" :openedPrescription="openedPrescription" :openedAttachment="openedAttachment" v-show="showComponent.edit"></edit-screen>
 			<render-screen :prescription="prescription" :template="template" @closeRender="closeRender" v-show="showComponent.render"></render-screen>
-			<prescriber-screen @cancel="cancelPrescriber" v-show="showComponent.prescriber"></prescriber-screen>
+			<prescriber-screen @save="closePrescriber" @cancel="closePrescriber" v-show="showComponent.prescriber"></prescriber-screen>
 			<div v-show="!showComponent.render">
 				<hr>
 			</div>
@@ -81,7 +81,6 @@ You should have received a copy of the GNU General Public License along with Med
 				this.showComponent.render=true;
 			},
 			closeRender() {
-				console.log("close")
 				this.showComponent.render=false;
 				this.showComponent.edit=true;
 			},
@@ -93,7 +92,7 @@ You should have received a copy of the GNU General Public License along with Med
 				this.showComponent.home=false;
 				this.showComponent.prescriber=true;
 			},
-			cancelPrescriber() {
+			closePrescriber() {
 				this.showComponent.prescriber=false;
 				this.showComponent.home=true;
 			},

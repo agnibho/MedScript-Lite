@@ -23,12 +23,36 @@ You should have received a copy of the GNU General Public License along with Med
 				</div>
 			</div>
 			<div class="form-group row mb-2">
+				<label for="pid" class="col-sm-2">PID:</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="pid" v-model="prescription.pid">
+				</div>
+			</div>
+			<div class="form-group row mb-2">
 				<label for="name" class="col-sm-2">Name:</label>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" id="name" v-model="prescription.name">
 				</div>
 			</div>
 			<div class="form-group row mb-2">
+				<div class="col-sm-10 offset-sm-2">
+					<div class="form-check form-check-inline">
+						<input class="form-check-input" type="radio" id="ageDob2" name="ageDob" value="dob" v-model="ageDob">
+						<label class="form-check-label" for="ageDob2">Date of Birth</label>
+					</div>
+					<div class="form-check form-check-inline">
+						<input class="form-check-input" type="radio" id="ageDob1" name="ageDob" value="age" v-model="ageDob">
+						<label class="form-check-label" for="ageDob1">Age</label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group row mb-2" :class="{'d-none':ageDob!='dob'}">
+				<label for="dob" class="col-sm-2">Date of Birth:</label>
+				<div class="col-sm-10">
+					<input type="date" class="form-control" id="dob" v-model="prescription.dob">
+				</div>
+			</div>
+			<div class="form-group row mb-2" :class="{'d-none':ageDob!='age'}">
 				<label for="age" class="col-sm-2">Age:</label>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" id="age" v-model="prescription.age">
@@ -59,7 +83,7 @@ You should have received a copy of the GNU General Public License along with Med
 				</div>
 			</div>
 			<div class="form-group row mb-2">
-				<label for="extra" class="col-sm-2">Extra/Certificate:</label>
+				<label for="extra" class="col-sm-2">Extra:</label>
 				<div class="col-sm-10">
 					<textarea class="form-control" id="extra" v-model="prescription.extra"></textarea>
 				</div>
@@ -122,6 +146,13 @@ You should have received a copy of the GNU General Public License along with Med
 				</div>
 			</div>
 			<hr>
+			<div class="form-group row">
+				<label for="certificate" class="col-sm-2">Certificate:</label>
+				<div class="col-sm-10">
+					<textarea class="form-control" id="certificate" v-model="prescription.certificate"></textarea>
+				</div>
+			</div>
+			<hr>
 			<div class="form-group row mb-2">
 				<label for="attachment" class="col-sm-2">Attachments:</label>
 				<div class="col-sm-10">
@@ -174,6 +205,7 @@ You should have received a copy of the GNU General Public License along with Med
 		data() {
 			return {
 				prescription: this.newData(),
+				ageDob: "age",
 				attachment: [],
 				selected: 0,
 				template: "default"
@@ -184,7 +216,9 @@ You should have received a copy of the GNU General Public License along with Med
 				var prescription={
 					date: new Date(new Date() - new Date().getTimezoneOffset() * 60000).toISOString().split(".")[0],
 					id: "",
+					pid: "",
 					name: "",
+					dob: "",
 					age: "",
 					sex: "",
 					address: "",
@@ -199,26 +233,33 @@ You should have received a copy of the GNU General Public License along with Med
 					investigation: "",
 					medication: "",
 					additional: "",
+					certificate: "",
 					attachment: "",
+					custom: null,
+					properties: null,
 					prescriber: this.loadPrescriber()
 				};
 				return prescription;
 			},
 			saveData() {
-				var prescription=JSON.stringify(this.prescription, null, 2);
 				var filename=""
+				this.prescription.date=this.prescription.date.replace("T", " ")
 				if(this.prescription.id){
 					filename=this.prescription.id.name.replace(/ +/g, "_")
-				}
-				else if(this.prescription.name){
-					filename=this.prescription.name.replace(/ +/g, "_")
 				}
 				else {
 					filename="prescription"
 				}
+				if(this.dobAge=="dob"){
+					this.prescription.age=""
+				}
+				else{
+					this.prescription.dob=""
+				}
+				var prescription=JSON.stringify(this.prescription, null, 2);
 				var zipfile=new JSZip();
 				zipfile.file("prescription.json", prescription);
-				zipfile.file("meta.json", JSON.stringify({"type": "MedScript", "version": "0.2"}))
+				zipfile.file("meta.json", JSON.stringify({"type": "MedScript", "version": "0.3"}))
 				this.attachment.forEach((item) => {
 					zipfile.file("attachment/"+item.name, item.content)
 				});
@@ -278,6 +319,11 @@ You should have received a copy of the GNU General Public License along with Med
 			openedPrescription: function(){
 				if(this.openedPrescription) {
 					this.prescription=structuredClone(this.openedPrescription)
+					if(JSON.stringify(this.prescription.prescriber)!=JSON.stringify(this.loadPrescriber())){
+						if(confirm("Original prescriber and current prescriber are different. Replace original with current?")){
+							this.prescription.prescriber=this.loadPrescriber()
+						}
+					}
 				}
 				else {
 					this.prescription=this.newData()

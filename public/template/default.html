@@ -40,11 +40,15 @@ You should have received a copy of the GNU General Public License along with Med
               <td>
                 <table class="table">
                   <tr>
-                    <td class="text-end" colspan="3"><small>{% if id %}ID: {{id}}{% endif %}</small></td>
+                    <td class="text-end" colspan="3"><small>{% if id %}<strong>ID:</strong> {{id}}{% endif %} {% if pid %}<strong>PID:</strong> {{pid}}{% endif %}</small></td>
                   </tr>
                   <tr>
                     <td><p><strong>Name:</strong> {{name}}</p></td>
+                    {% if age %}
                     <td><p><strong>Age:</strong> {{age}}</p></td>
+                    {% else %}
+                    <td><p><strong>Date of Birth:</strong> {{dob|date("MMMM DD, YYYY")}}</p></td>
+                    {% endif %}
                     <td><p><strong>Sex:</strong> {{sex}}</p></td>
                   </tr>
                   <tr>
@@ -96,7 +100,7 @@ You should have received a copy of the GNU General Public License along with Med
       <div class="footer" style="position:fixed;bottom:0;width:95%;left:50%; transform:translateX(-50%);background:white;bottom:0;border-top:2px solid black;height:100px">
         <table class="table">
           <tr><td class="col-sm-8">{% if mode %}Consultation: {{mode}}{% endif %}<br>{% if daw %}Dispense as written{% endif %}</td><td class="col-sm-4"><br><br></td></tr>
-          <tr><td><p>{{date|date("YYYY-MM-DDTHH:mm:ss")}}</p></td><td class="text-center" style="border-top: 2px solid gray"><p>Signature</p></td></tr>
+          <tr><td><p>{{date|date("MMMM DD, YYYY hh:mm a")}}</p></td><td class="text-center" style="border-top: 2px solid gray"><p>Signature</p></td></tr>
         </table>
       </div>
     </div>

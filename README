@@ -33,12 +33,12 @@ The structure of the mpaz file is as follows:
     <filename>.mpaz (zipped file)
     |-- meta.json (e.g. {"type": "MedScript", "version": "<mpaz version>"})
     |-- prescription.json (Prescription object in JSON format)
-    |-- template (included template for rendering)
+    |-- template (template for rendering, unsupported in MedScript Lite)
     |   |-- index.html (Jinja2 template)
     |   |-- <other template files e.g. CSS>
     |-- attachment (directory containing attachments)
     |   |-- <attached files>
-    |-- signature (optional: S/MIME signature)
+    |-- signature (optional: S/MIME signature, unsupported in MedScript Lite)
     |-- certificate.pem (optional: full certificate chain including end-user, intermediates and root certificate)
 
 Install
@@ -84,23 +84,27 @@ prescription editing screen will open. The required data can be entered in the
 form.
 
 The parts of a prescription are as follows:
+
 1. ID
-2. Name
-3. Age
-4. Sex
-5. Address
-6. Contact
-7. Diagnosis
-8. Extra (any extra data about the patient. can also be used to certify)
-9. DAW (dispense as written)
-10. Mode (consultation mode e.g. tele-consultation)
-11. Note (clinical notes)
-12. Report (available reports)
-13. Advice
-14. Investigation
-15. Medication
-16. Additional
-17. Attachment (files can be attached with the prescription from this option)
+2. PID
+3. Name
+4. Date of Birth
+5. Age
+6. Sex
+7. Address
+8. Contact
+9. Diagnosis
+10. Extra
+11. DAW (dispense as written)
+12. Mode (consultation mode e.g. tele-consultation)
+13. Note (clinical notes)
+14. Report (available reports)
+15. Advice
+16. Investigation
+17. Medication
+18. Additional
+19. Certificate
+20. Attachment (files can be attached with the prescription from this option)
 
 After editing the "Save" button below can be used to save the data in a
 mpaz file and download it. The "Render" button will render the prescription
@@ -130,7 +134,7 @@ Note that MedScript Lite do not include the templates in the mpaz file.
 
 ### Medical Certificate
 
-The Certify/Extra area can be used to write a medical prescription. Select the
+The certificate text area can be used to write a medical prescription. Select the
 medical certificate template from the edit screen for proper rendering.
 
 Prescriber
@@ -157,12 +161,14 @@ structure of the Prescription object is as follows:
     prescription (Prescription object)
     |-- date (string: date-time in the %Y-%m-%d %H:%M:%S format)
     |-- id (string: the id of the prescription)
+    |-- pid (string: the patient's id)
     |-- name (string: the name of the patient)
+    |-- dob (string: the date of birth)
     |-- age (string: the age of the patient, may contain unit)
     |-- sex (string: sex of the patient)
     |-- address (string: address of the patient)
     |-- contact (string: contact number / email of the patient)
-    |-- extra (string: extra data related to the prescription, may also be used for writing certificates)
+    |-- extra (string: extra data related to the prescription)
     |-- mode (string: the mode of consultation e.g. tele-consultation)
     |-- daw (boolean: dispense as written)
     |-- diagnosis (string: diagnosis of the patient's condition)
@@ -172,6 +178,9 @@ structure of the Prescription object is as follows:
     |-- investigation (string: investigations suggested for the patient)
     |-- medication (string: the list of medications prescribed)
     |-- additional (string: any additional advice/instructions)
+    |-- certificate (string: content of a medical certificate)
+    |-- custom (list: contents of custom input forms)
+    |-- properties (object: unused, included for future/plugin use)
     |-- prescriber (Prescriber object)
     |   |-- name (string: the name of the prescriber)
     |   |-- qualification (string: the qualification of the prescriber)
@@ -179,6 +188,7 @@ structure of the Prescription object is as follows:
     |   |-- address (string: the address of the prescriber)
     |   |-- contact (string: contact number / email of the prescriber)
     |   |-- extra (string: any extra data about the prescriber)
+    |   |-- properties (object: unused, included for future/plugin use)
 
 Website
 -------
